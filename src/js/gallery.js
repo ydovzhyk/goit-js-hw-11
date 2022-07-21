@@ -10,29 +10,35 @@ const loadMoreBtnEl = document.querySelector('.js-load-more');
 const userInput = document.querySelector('.js-search-input');
 const unsplashAPI = new UnsplashAPI();
 
-const onSearchFormSubmit = event => {
+const onSearchFormSubmit = async event => {
   event.preventDefault();
 
   unsplashAPI.query = userInput.value;
-  
   unsplashAPI.page = 1;
 
-  unsplashAPI
-    .fetchPhotosByQuery()
-    .then(response => {
-      
+  try { 
+    const response = await unsplashAPI.fetchPhotosByQuery();
+
       if (response.data.hits.length === 0) { //Якщо не коректний запрос повертаэться масив з length = 0, тоді очищаємо форму, ховаємо кнопку, очищуємо Input
+        
         Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.");
+
         galleryEl.innerHTML = ''; 
+
         loadMoreBtnEl.classList.add('is-hidden');
+
         event.target.reset();
         return;
       }
 
       if(response.data.hits.length < unsplashAPI.per_page) {
+
         loadMoreBtnEl.classList.add('is-hidden');
+
         galleryEl.innerHTML = createGalleryCards(response.data.hits);
+
         modalWindow();
+
         Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.", {
           timeout: 3000,
         });
@@ -48,44 +54,39 @@ const onSearchFormSubmit = event => {
       Notiflix.Notify.success(`Hooray! We found ${response.data.totalHits} totalHits images.`, {
         timeout: 3000,
       },);
-    })
-    .catch(err => {
+
+    } catch(err) {
       console.log(err);
-    });
+    };
 };
 
-const onLoadMoreBtnClick = event => {
+const onLoadMoreBtnClick = async event => {
   unsplashAPI.page += 1;
 
-  unsplashAPI
-    .fetchPhotosByQuery()
-    .then(response => {
+  try {
+    const response = await unsplashAPI.fetchPhotosByQuery();
 
-      let totalHitsLeft = response.data.totalHits - unsplashAPI.page;
+      if (response.data.totalHits <= unsplashAPI.per_page*unsplashAPI.page) {
 
-      if (unsplashAPI.page === response.data.totalHits) {
+        galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(response.data.hits));
+
+        modalWindow();
+
+        loadMoreBtnEl.classList.add('is-hidden');
 
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.", {
           timeout: 3000,
-        },);
-
-        loadMoreBtnEl.classList.add('is-hidden');
+        }, );
         return;
       }
-
+      
       galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(response.data.hits));
 
       modalWindow();
 
-      Notiflix.Notify.success(`Hooray! We found ${totalHitsLeft} totalHits images.`, {
-        timeout: 3000,
-      },);
-    })
-    .catch(err => {
+    } catch(err) {
       console.log(err);
-    });
-
-    
+    };
 };
 
 const modalWindow = function() {
