@@ -47,6 +47,7 @@ const onSearchFormSubmit = async event => {
 
       galleryEl.innerHTML = createGalleryCards(response.data.hits);
 
+      scrollOnButton();
       modalWindow();
 
       loadMoreBtnEl.classList.remove('is-hidden');
@@ -96,6 +97,17 @@ const modalWindow = function() {
   });
   return lightbox;
 };
+
+function scrollOnButton() {
+  const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: "smooth",
+});
+}
 
 searchFormEl.addEventListener('submit', onSearchFormSubmit);
 loadMoreBtnEl.addEventListener('click', onLoadMoreBtnClick);
