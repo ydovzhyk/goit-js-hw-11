@@ -83,6 +83,7 @@ const onLoadMoreBtnClick = async event => {
       
       galleryEl.insertAdjacentHTML('beforeend', createGalleryCards(response.data.hits));
 
+      scrollOnButton();
       modalWindow();
 
     } catch(err) {
