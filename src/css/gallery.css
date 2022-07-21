@@ -76,7 +76,7 @@ form {
   .photo-card{
     width: 280px;
     height: 285px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     box-shadow: 0 0 10px 0 #cccccc;
   }
   .gallery-img {
@@ -86,7 +86,7 @@ form {
     object-fit: cover;
   }
   .photo {
-    margin-top: -25px;
+    margin-top: -20px;
   }
   .photo {
     width: 280px;

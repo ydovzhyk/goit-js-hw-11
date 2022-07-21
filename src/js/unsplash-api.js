@@ -17,7 +17,7 @@ export class UnsplashAPI {
                 key: this.#API_KEY,
                 image_type: this.photo,
                 orientation: this.horizontal,
-                safesearch: this.true,
+                safesearch: this.false,
                 q: this.query,
                 page: this.page,
                 per_page: this.per_page,
